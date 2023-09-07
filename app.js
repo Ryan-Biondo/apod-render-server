@@ -56,6 +56,6 @@ app.get('/forward-to-nasa/apod/:date', async (req, res) => {
   }
 });
 
-// app.listen(port, () => {
-//   console.log(`https://small-projects-alpha.onrender.com`);
-// });
+app.listen(port, () => {
+  console.log(`https://apod-server.onrender.com`);
+});
