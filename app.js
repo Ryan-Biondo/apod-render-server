@@ -7,6 +7,17 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT;
 
+const rateLimit = require('express-rate-limit');
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+});
+
+// Apply rate limiter only to /forward-to-nasa/apod route
+app.use('/forward-to-nasa/apod', apiLimiter);
+
 // Enable CORS for all routes
 app.use(cors());
 
