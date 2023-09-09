@@ -3,11 +3,10 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
-
+const helmet = require('helmet');
 const app = express();
-const port = process.env.PORT;
-
 const rateLimit = require('express-rate-limit');
+const port = process.env.PORT;
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -15,11 +14,14 @@ const apiLimiter = rateLimit({
   message: 'Too many requests from this IP, please try again later.',
 });
 
+// Middleware
+app.use(cors());
+app.use(helmet());
+app.use(express.json({ limit: '1kb' })); // For JSON payloads
+app.use(express.urlencoded({ limit: '1kb' })); // For URL-encoded payloads
+
 // Apply rate limiter only to /forward-to-nasa/apod route
 app.use('/forward-to-nasa/apod', apiLimiter);
-
-// Enable CORS for all routes
-app.use(cors());
 
 // Function to retrieve your NASA API key
 const getAPIKey = () => {
